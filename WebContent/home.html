@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>WikiDemo</title>
+<link rel="stylesheet" href="main.css"/>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#submit").click(function(){
+  	var title = $("#input_title").val();
+    $.post("http://localhost:7001/com.jeffrey.wikidemo/api/language/plaintext/",
+    $("input[name=language]:checked", "#language_select").val() + " " + title,
+    function(data,status){
+    	var result;
+    	if(data == "(None)") {
+    		result = "No articles found";
+    	} else {
+    		result = "Wikipedia has articles an article for \"" + title +
+    		"\" in the following language editions: " + data;
+    	}
+    	$("#result").text(result);
+    });
+  });
+  
+  $("#input_title").keyup(function(event){
+    if(event.keyCode == 13){
+        $("#submit").click();
+    }
+	});
+});
+</script>
+</head>
+<body>
+<div id="background">
+<div id="wrapper">
+<header id="top_header">
+	<h1>WIKIBRAIN</h1>
+</header>
+
+<section>
+	<article>	
+		<h2>Language Explorer</h2>
+		<p>First, select your language:</p>
+		<form id="language_select">
+		<input type="radio" name="language" value="en" checked="checked"/>English<br>
+		<input type="radio" name="language" value="sw"/>Swahili<br>
+		<input type="radio" name="language" value="la"/>Latin<br>	
+		</form>
+		
+		<p>Enter the title of an article and hit submit. WikiDemo will fetch a list of language editions that contain the article!</p>
+		<input type="text" id="input_title" size="82"/>
+		<button id="submit">Submit</button>
+		<p id="result"><br></p>
+		
+		<br>
+		<br>
+		
+		<p>Check out the WikiBrain web API used to make this app <a href="http://localhost:7001/com.jeffrey.wikidemo/api/language">here</a>.</p>
+	</article>
+
+</section>
+</div>
+</div>
+</body>
+</html>
