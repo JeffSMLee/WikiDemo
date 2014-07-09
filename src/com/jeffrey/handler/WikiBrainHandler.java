@@ -80,13 +80,9 @@ public class WikiBrainHandler {
 		return null;
 	}
 	
-	private boolean hasArticle(Language nativeLang, Language targetLang, String title) {
-		try {
-			UniversalPage page = upDao.getByLocalPage(getLocalPageByTitle(title, nativeLang), 1);
-			if(page.getLocalId(targetLang) == -1) {
-				return false;
-			}
-		} catch (DaoException e) {
+	private boolean hasArticle(Language nativeLang, Language targetLang, String title) throws DaoException{
+		UniversalPage page = upDao.getByLocalPage(getLocalPageByTitle(title, nativeLang), 1);
+		if(page.getLocalId(targetLang) == -1) {
 			return false;
 		}
 		return true;
@@ -102,7 +98,7 @@ public class WikiBrainHandler {
 	public String getLanguagesWithArticle(Language nativeLang, 
 										  String title, 
 										  //String formatCode,
-										  boolean includeURL) {
+										  boolean includeURL) throws DaoException {
 		List<String> langsWithArticle = new ArrayList<String>();
 		
 		for (Language lang : langs) {
@@ -127,14 +123,8 @@ public class WikiBrainHandler {
 		return langsWithArticle.size() == 0 ? "(None)" : langsWithArticle.toString();
 	}
 	
-	public Iterable<LocalLink> getLinks(LocalPage page) {
-		try {
-			return llDao.getLinks(page.getLanguage(), page.getLocalId(), true);
-		} catch (DaoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public Iterable<LocalLink> getLinks(LocalPage page) throws DaoException {
+		return llDao.getLinks(page.getLanguage(), page.getLocalId(), true);
 	}
 	
 	public LanguageSet getLangs() {
